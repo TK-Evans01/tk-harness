@@ -64,6 +64,17 @@ Library: effect-ts
 
 The dispatcher injects this into the `<fp-primitives-active>` block; subagents adjust their stub signatures and review checklist accordingly.
 
+## Vocabulary
+
+- **Effect** vs **side-effect**: effect is named in the type; side-effect is unmodeled.
+- **Capability**: value granting permission to perform an effect (Reader-style without ceremony).
+- **Determinism boundary**: line where replayability ends; effects cross it.
+- **Bracket / scoped resource**: acquire-use-release as a combinator; not manual try/finally.
+- **Free monad / interpreter pattern**: program-as-data ADT plus a separate interpreter; reach for it when one program must run against multiple backends (real, mock, replayed).
+- **Tagless final**: parameterize the program by an interface of effects rather than a concrete monad; lighter than free monad, heavier on the type system.
+- **Structured concurrency**: child tasks bounded by parent scope; cancellation propagates downward; no orphan futures.
+- **Retry / timeout / schedule combinators**: declarative policies over an effect, not hand-rolled loops.
+
 ## See Also
 
 - `tier-2.md` - what you're building on

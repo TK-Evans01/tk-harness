@@ -19,6 +19,25 @@ This SKILL.md is the anchor. It carries the deep glossary and the forbidden-cons
 
 The `<fp-primitives-active>` dispatch block (see section 7) is the dispatch-time priming layer: it goes into every code-touching subagent's prompt and points back at this file for the full vocabulary.
 
+## 0. Principles
+
+Primitives are *what*. Principles are *why*. Reviewer names smells with primitives; designer reaches for primitives because of these principles.
+
+- **Functional core, imperative shell (FCIS).** The lattice every other rule snaps onto. Pure logic in one set of files; effects in thin shells.
+- **Equational reasoning.** A call may be replaced by its return value. The payoff of purity. See `laws-and-reasoning.md`.
+- **Errors as values.** `Result` / `Either` instantiate this. NEVER throw in core.
+- **Totality over partiality.** `Option` / `Maybe` instantiate this. NEVER `null` in core.
+- **Parse, don't validate.** Smart constructors at boundaries. After parsing, downstream code sees domain types only.
+- **Make illegal states unrepresentable.** ADTs over flag-soup. If a combination of fields is invalid, the type system rejects it.
+- **Type-driven development.** Signatures first; bodies fill the shape. The stub-author / body-implementor split exists for this reason.
+- **Composition over inheritance.** HOF and `pipe`; no class hierarchies for logic.
+- **Data-first, behavior-second.** Define the ADT before the operations on it.
+- **Errors and effects at the type level, not in your head.** If it can fail or touch the world, the type says so.
+- **Inject dependencies.** Reader-style without Reader. Capabilities passed as parameters; never imported globally.
+- **Property over example.** When it is a law, prove it. See `../property-based-testing/SKILL.md`.
+
+Depth pages: `laws-and-reasoning.md`, `modeling-deep.md`. Effect-typed depth lives in `tier-3.md` once a project opts in.
+
 ## 1. The FP Primitives Glossary
 
 The shared vocabulary every tk-harness subagent must understand. Categories are the categories the code-reviewer scans by.
@@ -28,6 +47,11 @@ The shared vocabulary every tk-harness subagent must understand. Categories are 
 - **Total function.** Defined for every value of its declared input type. No "this case shouldn't happen" branches.
 - **Determinism.** Same input -> same output, always. No clock, no random, no environment, no global state read.
 - **Idempotent.** `f(f(x)) == f(x)` for the operation in question. Useful at boundaries (writes, network).
+- **Observably pure.** External signature is pure (deterministic, no escaping side effect); internal body may use local mutation, in-place buffers, or SIMD. Marked with the perf-carveout comment. See `tier-2-perf-carveouts.md`.
+- **Local mutation.** Permitted inside one stack frame on values not yet escaped. Erased on return.
+- **Linear / affine use.** Value used at most once - safe to mutate in place.
+- **Transient.** A mutable scratch form of an immutable structure; frozen on return.
+- **Equivalence property.** A property test asserting the carve-out impl matches a naive reference impl on representative inputs.
 
 ### DATA
 - **Immutable.** Values do not change after construction. Updates produce new values.
@@ -52,6 +76,9 @@ The shared vocabulary every tk-harness subagent must understand. Categories are 
 - **Smart constructor.** A factory function that is the only public way to construct a domain type. Validates inputs and returns a Result. The raw constructor is private.
 - **Make illegal states unrepresentable.** Encode invariants in the type. ADTs over flag-soup. If a combination of fields is invalid, the type system should reject it.
 - **Effects at edges only.** I/O, time, randomness, environment access live in shell layers. The functional core is pure.
+- **Resource lifecycle.** Acquire-use-release pairs (file handle, connection, lock, transaction) live in the shell. Wrap with `bracket` / `using` / `defer` / RAII; never leak a handle into core. Cleanup is part of the contract, not an afterthought.
+- **Serialization at the boundary.** Smart ctor parses *in*; a corresponding `encode` / `serialize` function emits *out*. Both live at the same edge. See `boundaries-deeper.md`.
+- **Concurrency at the boundary.** Pure core is race-free by construction (immutable + no shared state). Locks, channels, queues live in the shell. See `concurrency-deep.md`.
 
 ## 2. Forbidden in the Functional Core
 
@@ -69,6 +96,21 @@ The code-reviewer Step 3a scans for these. Keep this list exact and grep-friendl
 - `for` / `while` loops over collections (use `map` / `filter` / `fold`)
 - `any` / `unknown` without a justification comment
 - partial functions (every input of the declared type must be handled; if not all inputs are valid, narrow the type)
+
+### Permitted Exception: Observably-Pure Perf Carve-Out
+
+A core file MAY use local mutation, in-place buffer fill, arena allocation, or SIMD intrinsics IF AND ONLY IF every condition holds:
+
+```
+// pattern: Functional Core
+// perf-carveout: <one-line reason>
+// benchmark: <commit-sha or path showing measured win>
+// equivalence-test: <test path proving same I/O as naive impl>
+```
+
+External signature stays pure: deterministic on declared inputs, no escape of mutable references, no observable side effect across the boundary. Reviewer Step 3b runs the equivalence property test. No proof => reject. Full rules and permitted techniques in `tier-2-perf-carveouts.md`.
+
+NO EXCEPTIONS to the marker requirement. A file without all four lines is not a carve-out; it is a bug.
 
 ## 3. Smart Constructors and Parse-Don't-Validate
 

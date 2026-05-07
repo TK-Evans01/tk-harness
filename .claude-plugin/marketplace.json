@@ -24,8 +24,8 @@
         },
         {
             "name": "tk-house-style",
-            "description": "Tier-2 nearly-pure functional house style; per-language quick cards; testing discipline.",
-            "version": "0.1.0",
+            "description": "Tier-2 nearly-pure functional house style; per-language quick cards; testing discipline; api-ergonomics; system-topology; architecture-patterns; tactical-patterns.",
+            "version": "0.2.0",
             "source": "./plugins/tk-house-style",
             "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
         },

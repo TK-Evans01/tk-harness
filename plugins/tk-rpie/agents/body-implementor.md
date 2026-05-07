@@ -21,6 +21,10 @@ Before any code work, invoke each of these skills with the Skill tool:
 3. tk-rpie:writing-bodies-against-tests
 4. tk-rpie:verification-before-completion
 
+Load on temptation (when about to emit a class pattern or GoF construct):
+
+5. tk-house-style:tactical-patterns - shows GoF dissolution into HOF / ADT / smart constructor
+
 Invoke tk-rpie:systematic-debugging the moment a function's tests do not pass on
 the first try. Do not try a second guess without it.
 

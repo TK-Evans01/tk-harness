@@ -1,5 +1,65 @@
 # Changelog
 
+## [tk-house-style] 0.2.0
+
+Adds higher-level design vocabulary as glossary-style reminders. Section 0
+Principles in the FP anchor; perf carve-out exception; design-phase skills
+for system topology and architecture; tactical-patterns for GoF dissolution;
+api-ergonomics with mandated caller-perspective comment; observability,
+boundaries-deeper, and concurrency-deep sub-pages for production primitives.
+Skills wired into writing-design-plans, writing-stubs-and-docs, and
+body-implementor. Reviewer Steps 3b-3e wired with design-review gating.
+
+**New skills:**
+- `skills/api-ergonomics/` (SKILL + `_examples.md` + `caller-perspective.md`)
+  - mandatory caller-perspective comment, error-shape positive guidance,
+  five-question checklist, anti-vocab (boolean blindness, primitive obsession,
+  train wreck, config explosion)
+- `skills/system-topology/SKILL.md` - mandatory Topology Decision Record,
+  seven-row catalogue (monolith, modular monolith, microservices, microkernel,
+  event-driven, dataflow, FaaS), modular-monolith default
+- `skills/architecture-patterns/` (SKILL + `_rare-shapes.md`) - mandatory
+  Architecture Decision Record, five core patterns (FCIS/hexagonal, pipeline,
+  state machine, event-sourced, interpreter), rare shapes split off
+- `skills/tactical-patterns/` (SKILL + `typestate-builder.md`) - GoF
+  dissolution table; smart constructor + typestate builder survive
+- `skills/observability/SKILL.md` - effect-placement table (logger in core
+  ok, metrics/spans only in shell), structured logging vocabulary,
+  cardinality discipline
+
+**New sub-pages under `nearly-pure-functional/`:**
+- `laws-and-reasoning.md` - equational reasoning, algebraic laws,
+  parametricity, memoization soundness
+- `modeling-deep.md` - phantom/branded types, refinement types, typestate
+- `tier-2-perf-carveouts.md` - observably-pure carve-out marker, permitted
+  local techniques, equivalence-property test requirement
+- `boundaries-deeper.md` - serialization out, schema evolution, canonical
+  form, hashing-as-identity
+- `concurrency-deep.md` - races, atomicity, channels over locks, back-
+  pressure, structured concurrency, idempotent retry
+
+**Changed:**
+- `skills/nearly-pure-functional/SKILL.md` - section 0 Principles (12
+  one-liners cross-linking primitives to principles); PURITY glossary
+  extended with observably pure / local mutation / linear use / transient /
+  equivalence property; BOUNDARIES extended with resource lifecycle,
+  serialization, concurrency cross-links; section 2 forbidden-list extended
+  with observably-pure carve-out exception block
+- `skills/nearly-pure-functional/tier-3.md` - vocabulary section: effect vs
+  side-effect, capability, determinism boundary, bracket, free monad,
+  tagless final, structured concurrency, retry/timeout combinators
+- `tk-rpie/agents/code-reviewer.md` - new Steps 3b (perf carve-out),
+  3c (api ergonomics + caller-perspective drift), 3d (topology decision
+  record, design-review only with REVIEW_TYPE gate), 3e (architecture
+  decision record, design-review only with REVIEW_TYPE gate)
+- `tk-rpie/skills/writing-design-plans/SKILL.md` - mandatory companions list
+  pointing at system-topology, architecture-patterns, nearly-pure-functional,
+  api-ergonomics
+- `tk-rpie/skills/writing-stubs-and-docs/SKILL.md` - mandatory companion
+  pointing at api-ergonomics
+- `tk-rpie/agents/body-implementor.md` - Mandatory First Actions extended
+  with on-temptation load of tactical-patterns
+
 ## [tk-harness] M3+M4+M5 — house-style, verify, hooks, ROADMAP, reconciliation
 
 Six parallel agents landed the rest of the harness in one wave plus a

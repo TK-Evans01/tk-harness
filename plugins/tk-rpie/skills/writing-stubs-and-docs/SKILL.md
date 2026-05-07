@@ -10,6 +10,8 @@ user-invocable: false
 
 A stub is a frozen contract: a fully typed signature plus a docstring describing the promise, with the body left unimplemented. Stubs are written BEFORE tests and BEFORE bodies. The next agent writes tests against the contract you froze; the agent after that writes the body that satisfies both.
 
+**Mandatory companion.** Load `tk-house-style:api-ergonomics` before writing signatures. Every stubs file authored here MUST carry the `// caller-perspective:` comment specified in that skill. Reviewer flags drift; missing comment = Critical.
+
 Stubs are NOT logic. Stubs are NOT tests. Stubs are NOT placeholders for "I'll figure out the types later".
 
 ## Why Split Stubs From Bodies

@@ -43,6 +43,10 @@ Code Review Progress:
 - [ ] Step 2b: Refactor mode - old vs new diff (if refactor: task)
 - [ ] Step 3: Review code quality with skills
 - [ ] Step 3a: FP-primitives Tier-2 forbidden-pattern scan
+- [ ] Step 3b: Performance carve-out marker + equivalence test
+- [ ] Step 3c: API ergonomics scan + caller-perspective drift (public exports only)
+- [ ] Step 3d: Topology Decision Record (skip unless REVIEW_TYPE=design-plan)
+- [ ] Step 3e: Architecture Decision Record (skip unless REVIEW_TYPE=design-plan)
 - [ ] Step 4: Check test coverage and quality
 - [ ] Step 5: Categorize all issues
 - [ ] Step 6: Deliver structured review
@@ -198,6 +202,66 @@ For language-specific skills:
 - Style nit on FP idiom (e.g., for-loop where `map` would do, but file is shell and no purity violation) = **Minor**
 
 For every Critical FP-violation, the punch list entry must include the exact `Grep` hit (file:line + matched line).
+
+### Step 3b: Performance Carve-Out Check
+
+**Trigger:** any changed file containing `// perf-carveout:` or `# perf-carveout:`.
+
+**Procedure (per matching file):**
+
+1. Assert all four marker lines present, in order:
+   - `pattern: Functional Core`
+   - `perf-carveout: <reason>`
+   - `benchmark: <commit-sha or path>`
+   - `equivalence-test: <test path>`
+   Missing any line = **Critical**.
+2. Resolve `equivalence-test` path; assert file exists. Missing = **Critical**.
+3. Run the equivalence test. Failing = **Critical**.
+4. Resolve `benchmark` path or sha; assert reachable. Missing = **Important**.
+5. Reject the carve-out if the file does not actually contain measured-hot-path code (no benchmark cited, no profile evidence). = **Critical**.
+
+See `tk-house-style:nearly-pure-functional/tier-2-perf-carveouts.md` for the full rule set.
+
+### Step 3c: API Ergonomics Check (public exports only)
+
+**Trigger:** changed files exporting public symbols, or stub-author commits (stubs files).
+
+**Procedure:**
+
+1. Assert each stubs file contains a `// caller-perspective:` comment. Missing = **Critical**.
+2. Diff caller-perspective comment against the actual exported surface; flag drift (function names, error variants, signatures). Drift = **Important**.
+3. Walk the five-question ergonomics checklist (`tk-house-style:api-ergonomics/SKILL.md`); each "no" = **Important**.
+4. Grep for red flags from `api-ergonomics/SKILL.md` (>5 positional args, >10 option fields, `string` / `Error` error type on public API, exposed internal types). Each = **Important**.
+
+See `tk-house-style:api-ergonomics/SKILL.md`.
+
+### Step 3d: Topology Decision Record (design-review only)
+
+**SKIP THIS STEP** unless the review is a design-plan review. Implementation-phase reviews (per-phase, final) MUST NOT run Steps 3d/3e; they will false-positive on every commit-level diff. Design-plan reviews are dispatched with `REVIEW_TYPE: design-plan` in the prompt; absence of this tag => skip 3d and 3e.
+
+**Trigger:** reviewing a design plan that involves system shape (topology phase, not implementation phase).
+
+**Procedure:**
+
+1. Grep for `## Topology Decision` heading in design-plan files. Missing = **Critical**.
+2. Assert all five fields present: Chosen, Why, Rejected, Reversibility, Re-evaluation trigger. Missing any = **Critical**.
+3. Assert "Why" cites at least one measurement (numbers, RPS, team size, regulatory split). Aspiration-only = **Important**.
+4. Assert "Rejected" lists at least 2 alternatives. Fewer = **Important**.
+
+See `tk-house-style:system-topology/SKILL.md`.
+
+### Step 3e: Architecture Decision Record (design-review only)
+
+**Trigger:** reviewing a design plan that introduces a non-trivial module or service.
+
+**Procedure:**
+
+1. Grep for `## Architecture Decision` heading in design-plan files. Missing = **Critical**.
+2. Assert all four fields present: Chosen, Why, Rejected, FP-fit notes. Missing any = **Critical**.
+3. Assert "Why" mentions FP fit explicitly. Missing = **Important**.
+4. Assert "Rejected" lists at least 1 alternative. Fewer = **Important**.
+
+See `tk-house-style:architecture-patterns/SKILL.md`.
 
 ### Step 4: Check Test Coverage and Quality
 

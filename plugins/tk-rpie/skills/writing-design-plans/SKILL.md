@@ -14,6 +14,13 @@ Complete the design document by appending validated design from brainstorming to
 
 **Announce at start:** "I'm using the writing-design-plans skill to complete the design document."
 
+**Mandatory companions.** Before writing the body, load:
+
+- `tk-house-style:system-topology` - if the design crosses processes, services, or independent deploys. The design MUST contain a Topology Decision Record per that skill.
+- `tk-house-style:architecture-patterns` - for any non-trivial module introduced. The design MUST contain an Architecture Decision Record per that skill.
+- `tk-house-style:nearly-pure-functional` - FP discipline applicable to all modules.
+- `tk-house-style:api-ergonomics` - when the design specifies a public API contract.
+
 **Context:** Design document already exists with Title, Summary placeholder, confirmed Definition of Done, and Glossary placeholder. This skill appends the body and fills in placeholders.
 
 ## Level of Detail: Design vs Implementation

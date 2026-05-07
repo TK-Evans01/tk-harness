@@ -1,7 +1,7 @@
 {
     "name": "tk-house-style",
     "description": "Tier-2 nearly-pure functional house style; per-language quick cards (TS, Python, Rust); testing discipline; FP-primitives glossary.",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"},
     "license": "CC-BY-SA-4.0",
     "keywords": ["functional-programming", "style", "tdd", "tk-harness"]
