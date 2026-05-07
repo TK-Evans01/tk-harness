@@ -1,0 +1,17 @@
+# Drop into the project's verify.toml for /verify auto-detection.
+
+[verify.rust]
+enabled = true
+
+# /verify invokes each command verbatim from the workspace root.
+fmt_cmd       = "cargo fmt --all -- --check"
+lint_cmd      = "cargo clippy --all-targets --all-features -- -D warnings"
+test_cmd      = "cargo test --all"
+
+# Advisory: surfaced in /verify output but not failure-causing.
+advisory_cmd  = "bash visibility-audit.sh ."
+
+# Globs used by the Tier-2 reviewer pass (Step 3a) for I/O / panic /
+# Date-equivalent leaks.
+core_globs  = ["crates/core/**/*.rs", "src/core/**/*.rs"]
+shell_globs = ["crates/shell/**/*.rs", "src/shell/**/*.rs"]

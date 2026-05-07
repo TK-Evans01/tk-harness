@@ -1,0 +1,80 @@
+# Example .tk-harness/verify.toml
+#
+# Drop this file at <project-root>/.tk-harness/verify.toml and edit
+# the table that matches your project's language. The /verify slash
+# command picks the active language from which manifest exists in
+# the project root:
+#
+#   Cargo.toml     -> [verify.rust]
+#   pyproject.toml -> [verify.python]
+#   package.json   -> [verify.typescript]
+#
+# A step with an empty string or missing key is skipped silently.
+# The pipeline is fail-fast: typecheck -> lint -> arch-lint ->
+# purity -> tests.
+
+[verify]
+# Stop the pipeline at the first failed step. Always true for now;
+# reserved here so future opts can layer on cleanly.
+fail_fast = true
+
+
+# ---------------------------------------------------------------
+# TypeScript / JavaScript
+# ---------------------------------------------------------------
+[verify.typescript]
+
+# Compile-time type errors. Use the project's tsconfig.
+typecheck = "tsc --noEmit"
+
+# Style and bug-pattern lint. ESLint's default config.
+lint = "eslint ."
+
+# Architectural rules: layer boundaries, forbidden imports.
+# dependency-cruiser config lives at .dependency-cruiser.cjs.
+arch-lint = "depcruise --config .dependency-cruiser.cjs src"
+
+# Tier 2 nearly-pure FP scan. The functional eslint config is
+# bundled by the tk-house-style plugin -- copy it to your repo as
+# eslint.functional.cjs (or symlink it).
+purity = "eslint -c eslint.functional.cjs ."
+
+# Unit and integration tests.
+tests = "vitest run"
+
+
+# ---------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------
+[verify.python]
+
+typecheck = "mypy --strict src"
+lint      = "ruff check ."
+
+# Import-Linter config lives at .importlinter at repo root.
+arch-lint = "lint-imports"
+
+# Tier 2 forbidden-list. ruff config bundled by tk-house-style;
+# copy it to .tk-harness/ruff.toml.
+purity = "ruff check --config ./.tk-harness/ruff.toml src"
+
+tests = "pytest"
+
+
+# ---------------------------------------------------------------
+# Rust
+# ---------------------------------------------------------------
+[verify.rust]
+
+typecheck = "cargo check --workspace"
+lint      = "cargo clippy --workspace --all-targets -- -D warnings"
+
+# Visibility / module-boundary audit. Drop your script at
+# .tk-harness/scripts/visibility-audit.sh.
+arch-lint = "bash .tk-harness/scripts/visibility-audit.sh"
+
+# Empty -> skipped. Tier 2 forbidden patterns are enforced by the
+# clippy preset already loaded by the `lint` step above.
+purity = ""
+
+tests = "cargo test --workspace"

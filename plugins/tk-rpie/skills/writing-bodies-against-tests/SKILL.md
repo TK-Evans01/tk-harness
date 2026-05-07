@@ -52,7 +52,7 @@ Do not edit it. Possible reasons it might look wrong:
 - The test is genuinely buggy.
 
 Only the third case is a real test bug, and you cannot fix it from this seat.
-STOP, write BLOCKED.md describing the suspected bug, and escalate.
+STOP, write a BLOCKED report at `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` describing the suspected bug, and escalate.
 
 ### If a signature seems wrong
 
@@ -80,7 +80,7 @@ For each function the task assigns you:
 6. Red -> read the failure message and stack. One quick retry if the cause is
    obviously a typo or off-by-one.
 7. Still red -> invoke tk-rpie:systematic-debugging and follow its phases.
-8. Three attempts max per function. After three, STOP and write BLOCKED.md.
+8. Three attempts max per function. After three, STOP and write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`.
 
 The minimum-body rule matters. Do not generalize beyond the test. If the test
 asks for `add(2, 3) == 5`, a body that handles negative numbers, floats, and
@@ -160,7 +160,7 @@ no `# noqa`, no `#[allow(...)]`) just to ship.
 | Generalize past the tests ("might as well")      | Out of scope; reviewer flags follow-up; minimum body that honors contract     |
 | Reformat or rename in passing                    | Out of scope; muddies the diff                                                 |
 | `xfail` / `skip` a stubborn test                 | Suppresses the failure instead of fixing or escalating                         |
-| Try fix #4 after three failed attempts           | Architectural / contract problem; STOP and write BLOCKED.md                    |
+| Try fix #4 after three failed attempts           | Architectural / contract problem; STOP and write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` |
 
 ## Red Flags - STOP
 
@@ -178,9 +178,11 @@ If you catch yourself thinking any of these, stop and reset:
 Each of these is a freeze break, a scope expansion, or a debugging shortcut.
 None are acceptable.
 
-## When To Write BLOCKED.md
+## When To Write a BLOCKED Report
 
-Write `BLOCKED.md` at the working dir root and stop coding when:
+Write the BLOCKED report at `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`
+(timestamp format `YYYYMMDDTHHMMSSZ`, e.g. `20260506T143022Z`; create the
+directory if missing) and stop coding when:
 
 - Three attempts on the same function have failed.
 - A test appears genuinely wrong (after re-reading stubs and design doc).
@@ -188,7 +190,7 @@ Write `BLOCKED.md` at the working dir root and stop coding when:
 - The design as specified is infeasible given other frozen contracts.
 - A required dependency, file, or upstream module is missing.
 
-The BLOCKED.md should contain:
+The BLOCKED report should contain:
 
 - Task id and the specific function / test / stub at issue
 - Per-attempt log: hypothesis, change, observed result
@@ -216,4 +218,4 @@ Before reporting success:
 - [ ] Report includes commit SHA and per-step /verify status
 
 If any box is unchecked, you are not done. Either finish the work or write
-BLOCKED.md.
+`.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`.

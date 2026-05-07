@@ -1,0 +1,32 @@
+# tk-house-style: clippy.toml
+# Per-lint thresholds. Lint *selection* lives in [workspace.lints] in
+# Cargo.toml — see workspace-lints.toml.snippet.
+
+# Cognitive complexity threshold (default 25). Tighten for core code.
+cognitive-complexity-threshold = 15
+
+# Type complexity (default 250). Encourage type aliases for nasty
+# generic soup.
+type-complexity-threshold = 200
+
+# Reasonable function size limits.
+too-many-arguments-threshold = 6
+too-many-lines-threshold     = 120
+
+# Trivially-copyable items below this size should be passed by value.
+trivial-copy-size-limit      = 16
+
+# Allow `unwrap`/`expect` in test modules. The actual deny lives in
+# [workspace.lints]; tests opt out via #[cfg_attr(test, allow(...))].
+allow-expect-in-tests = true
+allow-unwrap-in-tests = true
+allow-panic-in-tests  = true
+allow-dbg-in-tests    = true
+allow-print-in-tests  = true
+
+# Allow these names — common, idiomatic.
+disallowed-names = ["foo", "bar", "baz", "tmp"]
+
+# Misc.
+avoid-breaking-exported-api = true
+msrv = "1.74"

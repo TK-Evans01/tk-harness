@@ -86,7 +86,9 @@ See `plugins/tk-house-style/skills/nearly-pure-functional/SKILL.md` (M3).
 - **M5** `tk-hooks` — port ed3d hook trio
 - **M6** Dogfood on a real project, tighten
 
-Note: triage gate deferred. Every task currently routes through full RPIE.
+Note: triage gate deferred. Every task currently routes through full RPSTIE.
+
+> **RPSTIE vs tk-rpie.** "RPSTIE" (Research-Plan-Stub-Test-Implement-Eval) is the workflow acronym, capturing all six stages including the explicit Stub and Test split. "tk-rpie" is the plugin name; we kept the shorter form for namespace ergonomics in skill / agent references (`tk-rpie:writing-stubs-and-docs`, etc.). The plugin name is not changing.
 
 ## Attribution
 

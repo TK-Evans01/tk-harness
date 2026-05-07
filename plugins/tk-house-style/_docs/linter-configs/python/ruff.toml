@@ -1,0 +1,90 @@
+# tk-house-style: Ruff config. Tier-2 functional-core defaults.
+# Copy to project root as `ruff.toml`, or fold into pyproject.toml under
+# [tool.ruff] (see pyproject-snippet.toml).
+
+target-version = "py311"
+line-length    = 100
+src            = ["src", "tests"]
+
+[lint]
+# Rule families. See https://docs.astral.sh/ruff/rules/ for the full list.
+select = [
+  "ANN",  # flake8-annotations  (type hints required)
+  "B",    # flake8-bugbear      (B006 mutable defaults, B023 closure-vars, ...)
+  "C90",  # mccabe              (cyclomatic complexity)
+  "E",    # pycodestyle errors  (incl. E722 bare-except)
+  "F",    # pyflakes
+  "I",    # isort               (import order)
+  "N",    # pep8-naming
+  "PERF", # perflint
+  "PIE",  # flake8-pie
+  "PL",   # pylint subset       (incl. PLW0603 no-global, PLR0904 too-many-public)
+  "PT",   # flake8-pytest-style
+  "PTH",  # flake8-use-pathlib
+  "RET",  # flake8-return
+  "RUF",  # ruff-specific       (incl. RUF012 mutable class attr)
+  "S",    # flake8-bandit       (security; relevant for boundary code)
+  "SIM",  # flake8-simplify
+  "TID",  # flake8-tidy-imports
+  "UP",   # pyupgrade
+  "W",    # pycodestyle warnings
+]
+
+ignore = [
+  "D",       # pydocstyle: handled by separate tooling if at all
+  "TRY002",  # broad-except-class: covered by E722 + reviewer pass
+  "ANN101",  # missing-type-self  (deprecated; mypy handles)
+  "ANN102",  # missing-type-cls   (deprecated; mypy handles)
+  "S101",   # assert in tests is fine
+]
+
+# Tier-2 forbidden list — coverage notes:
+#   throw / raise in core            -> reviewer (3a) grep
+#   try/except in core               -> reviewer (3a) grep
+#   None returns leaking             -> mypy + Optional discipline
+#   time.time / random / uuid impure -> reviewer (3a) grep (custom plugin)
+#   mutation of arguments            -> B006 + reviewer
+#   mutable global state             -> PLW0603
+#   for/while over collections       -> PERF101/PERF102 (soft)
+#   Any unjustified                  -> ANN401 (below)
+#   partial functions                -> reviewer + mypy strict
+
+[lint.per-file-ignores]
+# Tests can be loose.
+"tests/**/*.py"   = ["ANN", "S", "PLR2004", "PLR0915", "B011"]
+"**/conftest.py"  = ["ANN"]
+# __init__.py: re-export shim, allow unused imports.
+"__init__.py"     = ["F401"]
+# Shell layer: I/O is the point. Allow side-effecty patterns.
+"src/shell/**/*.py" = ["S", "PERF"]
+
+[lint.flake8-annotations]
+mypy-init-return        = true
+suppress-dummy-args     = true
+allow-star-arg-any      = false
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path"]
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+max-args            = 6
+max-public-methods  = 12     # PLR0904 threshold
+max-statements      = 40
+
+[lint.isort]
+known-first-party = []        # set per project
+combine-as-imports = true
+force-single-line  = false
+split-on-trailing-comma = true
+
+[format]
+quote-style              = "double"
+indent-style             = "space"
+docstring-code-format    = true
+skip-magic-trailing-comma = false

@@ -157,7 +157,7 @@ The compiler now refuses the impossible state. Tests do not need to assert it ca
 | Excuse / Thought | Reality | What To Do |
 |------------------|---------|------------|
 | "I'll implement just the trivial path now" | Then it is not a stub, it is a half-body. Tests will be written against your half-body, not the contract. | Replace body with the unimplemented marker. Move logic to the body phase. |
-| "Tests can come later, after the body" | The whole RPIE workflow inverts that. Tests are next. They drive the body. | Stop. Hand off to `test-author`. |
+| "Tests can come later, after the body" | The whole RPSTIE workflow inverts that. Tests are next. They drive the body. | Stop. Hand off to `test-author`. |
 | "The shape is unknown so I'll use `any`" | `any` defeats the typechecker, which is the only reason to write stubs first. | Define an ADT for the unknown shape. Add a `parse` smart constructor. The body decides how to populate it. |
 | "Returning `null` is simpler than `Option`" | `null` punishes every caller for one author's convenience. | Return `Option<T>`. Callers pattern-match. |
 | "I will throw on error and document it in the docstring" | Documented exceptions are still unchecked at the call site. | Return `Result<T, E>` with a discriminated `E`. |

@@ -82,7 +82,7 @@ For each function in the list, in dependency order (leaves first):
    is obvious (typo, off-by-one). Otherwise invoke
    tk-rpie:systematic-debugging and follow its phases.
 6. Hard cap: 3 attempts per function. After the third failed attempt, STOP and
-   write a BLOCKED.md (see Forbidden / Blocked below).
+   write a BLOCKED report file (see Forbidden / Blocked below).
 
 Do not batch bodies. Do not run the full suite between functions; per-function
 tests are the feedback loop. Full suite comes once at the end.
@@ -140,7 +140,7 @@ When you cannot proceed (3 failed attempts on one function, suspected test bug,
 suspected stub bug, infeasible design, missing dependency):
 
 1. STOP coding.
-2. Write `BLOCKED.md` at the working dir root with:
+2. Write the BLOCKED report at `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` (timestamp format `YYYYMMDDTHHMMSSZ`, e.g. `20260506T143022Z`; create the directory if missing) with:
    - Task id
    - Function (or test, or stub) at issue
    - What you tried (per attempt: hypothesis, change, result)
@@ -185,8 +185,16 @@ Message: impl: <task-id> <task-title>
 Compromises: none | <list with rationale>
 ```
 
-If BLOCKED, replace the body with a BLOCKED section pointing at BLOCKED.md and
-omit the commit.
+If BLOCKED, replace the body with a BLOCKED section pointing at the
+`.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` file you wrote and
+omit the commit. The LAST LINE of your report MUST be:
+
+```
+STATUS: BLOCKED - <one-line reason>
+```
+
+(ASCII hyphen with spaces, not em-dash. The orchestrator regex
+`^STATUS: BLOCKED\b` matches this on the last line of your report.)
 
 ## Tool Usage Rules
 
@@ -195,6 +203,7 @@ omit the commit.
 - Search with Glob and Grep. Do not use `find` or shell `grep`.
 - No brace expansion (`{a,b}`) in Bash. List paths explicitly or run separate
   commands.
-- Edit existing files with Edit. Use Write only to create the BLOCKED.md or new
-  source files the stubs already declared as new.
+- Edit existing files with Edit. Use Write only to create the BLOCKED report
+  (under `.tk-harness/blocked/`) or new source files the stubs already declared
+  as new.
 - Run tests narrowly first (per-function), broadly only at /verify time.

@@ -102,6 +102,19 @@ Message: stubs: <task description>
 <None | list>
 ```
 
+When you cannot complete the task (impossible contract, missing dependency,
+upstream stub bug), instead of the success report write a BLOCKED report whose
+LAST LINE is exactly:
+
+```
+STATUS: BLOCKED - <one-line reason>
+```
+
+Include a path to a written-out blocker file at
+`.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` (timestamp format
+`YYYYMMDDTHHMMSSZ`). The orchestrator regex `^STATUS: BLOCKED\b` matches the
+last line. Use ASCII hyphen with spaces, never em-dash.
+
 ## Tool Usage Rules
 
 - Read files with the `Read` tool, using `offset` and `limit`. Do not use `sed`, `cat`, `head`, or `tail`.

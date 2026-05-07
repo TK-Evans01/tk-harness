@@ -114,3 +114,14 @@ Return to the dispatcher:
 - **Open questions / blockers** - if you stopped before commit, what stub-author needs to fix.
 
 Keep the report under 300 words. The dispatcher reads your text output, not files you create.
+
+If you cannot proceed (stub bug, impossible test, missing dependency), write a
+BLOCKED file at `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` (timestamp
+format `YYYYMMDDTHHMMSSZ`) and end your report with this exact LAST LINE:
+
+```
+STATUS: BLOCKED - <one-line reason>
+```
+
+ASCII hyphen with spaces, not em-dash. The orchestrator regex
+`^STATUS: BLOCKED\b` matches this on the last line of your report.

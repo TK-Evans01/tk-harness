@@ -33,7 +33,9 @@ This split is the design point of tk-rpie. Do not collapse it.
 > - test-author MUST NOT edit stub files. If a stub is wrong, test-author returns a BLOCKED report identifying the stub bug; you escalate by stopping the phase.
 > - body-implementor MUST NOT edit stub or test files. If a test is wrong, or a stub signature is wrong, body-implementor returns a BLOCKED report; you escalate.
 > - The handoff between agents is a commit SHA. You capture that SHA from each agent's response and pass it to the next agent so the next agent can confirm what state it is operating against.
-> - If any agent in the chain returns BLOCKED, write a `BLOCKED.md` describing the situation and stop the phase. Do not proceed to the next task.
+> - If any agent in the chain returns BLOCKED, write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` (timestamp format `YYYYMMDDTHHMMSSZ`) describing the situation and stop the phase. Do not proceed to the next task.
+>
+> **BLOCKED detection regex.** A subagent's report is considered BLOCKED iff its LAST LINE matches the POSIX-extended regex `^STATUS: BLOCKED\b`. The agents emit `STATUS: BLOCKED - <one-line reason>` (ASCII hyphen with spaces, never em-dash) as the final line of their report when they cannot proceed. You match against the agent's text output, not files they wrote.
 
 These invariants exist because the value of the split is honest red->green TDD with clear authorship boundaries. The moment one agent edits another's artifacts, the signal is lost.
 
@@ -250,7 +252,7 @@ If you cannot proceed (plan ambiguity, missing dependency), return BLOCKED with 
 
 **Capture STUBS_SHA from the response.** Print the response verbatim to the user.
 
-If response is BLOCKED: write `BLOCKED.md` in the working directory with the agent's reason and the task identifier; mark Phase Nb as blocked; surface to the user; STOP. Do not proceed to test-author.
+If response is BLOCKED (last line matches `^STATUS: BLOCKED\b`): write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` with the agent's reason and the task identifier; mark Phase Nb as blocked; surface to the user; STOP. Do not proceed to test-author.
 
 ##### 3b.2. Dispatch test-author
 
@@ -291,9 +293,9 @@ If a stub is wrong (signature or types), DO NOT FIX IT. Return BLOCKED with the 
 
 **Capture TESTS_SHA from the response.** Print the response verbatim.
 
-If test-author reports the wrong failure mode (ImportError, AttributeError, etc.), that means the stubs are broken. STOP, surface to the user, write `BLOCKED.md`, do not proceed to body-implementor. This is the critical check that the chain catches stub bugs early.
+If test-author reports the wrong failure mode (ImportError, AttributeError, etc.), that means the stubs are broken. STOP, surface to the user, write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`, do not proceed to body-implementor. This is the critical check that the chain catches stub bugs early.
 
-If response is BLOCKED for any other reason: write `BLOCKED.md`, surface, STOP.
+If response is BLOCKED for any other reason (last line matches `^STATUS: BLOCKED\b`): write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`, surface, STOP.
 
 ##### 3b.3. Dispatch body-implementor
 
@@ -335,7 +337,7 @@ If a stub signature is wrong, or a test is wrong, DO NOT FIX IT. Return BLOCKED 
 
 Print the response verbatim.
 
-If response is BLOCKED: write `BLOCKED.md`, surface, STOP.
+If response is BLOCKED (last line matches `^STATUS: BLOCKED\b`): write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`, surface, STOP.
 
 ##### 3b.4. Move to next task
 
@@ -440,7 +442,7 @@ Minor issues are not optional.
 
 - ALL issues must be fixed (Critical, Important, AND Minor).
 - Ignore APPROVED/BLOCKED status flags - count issues only.
-- **Three-strike rule:** If the same issue (or substantially the same set of issues) persists across THREE review cycles in a row, STOP. The bug-fixer is not converging. Write `BLOCKED.md` in the working directory containing:
+- **Three-strike rule:** If the same issue (or substantially the same set of issues) persists across THREE review cycles in a row, STOP. The bug-fixer is not converging. Write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` (timestamp format `YYYYMMDDTHHMMSSZ`) containing:
   - Phase identifier
   - The persistent issues
   - The three review cycle summaries
@@ -511,7 +513,7 @@ Use the `requesting-code-review` skill for final code review.
 - The `<fp-primitives-active>` block (project-wide tier/language)
 - AC_COVERAGE_CHECK: "Verify all acceptance criteria (using scoped format `{slug}.AC*`) from the design plan are covered by at least one phase. Flag any ACs not addressed."
 
-Continue the review loop until zero issues remain. Same 3-strike cap as 3c. If 3 strikes hit, write `BLOCKED.md` and stop.
+Continue the review loop until zero issues remain. Same 3-strike cap as 3c. If 3 strikes hit, write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` and stop.
 
 #### 5b. Test Analysis
 
@@ -582,7 +584,7 @@ Print the response verbatim.
    ```
 
 2. Re-run test-analyst.
-3. Repeat until coverage PASS or three attempts fail. On 3 strikes, write `BLOCKED.md` and escalate to the user.
+3. Repeat until coverage PASS or three attempts fail. On 3 strikes, write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md` and escalate to the user.
 
 **If analyst returns coverage PASS:**
 
@@ -683,7 +685,7 @@ You: I am using the `executing-an-implementation-plan` skill.
 --- Task 1 ---
 [stub -> test -> body chain]
 [stub-author returns OK; test-author reports tests fail with ImportError]
--> WRONG FAILURE MODE. Stub bug. Write BLOCKED.md, surface to user, STOP.
+-> WRONG FAILURE MODE. Stub bug. Write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`, surface to user, STOP.
 [User intervenes; resumes after fixing stub authoring]
 
 [Resume; redo Task 1 chain from stub-author. Now correct.]
@@ -732,7 +734,7 @@ You: I am using the `executing-an-implementation-plan` skill.
 | "stub-author can write a quick body, just to make tests pass faster" | No. Stub bodies must raise NotImplementedError-equivalent only. |
 | "Context error on review, I will skip the review" | No. Chunk the review into halves. Never skip review. |
 | "Minor issues can wait" | No. Fix ALL issues including Minor. |
-| "Bug-fixer keeps missing the same issue, but I will give it one more shot" | After 3 strikes, STOP. Write BLOCKED.md. Get the human. |
+| "Bug-fixer keeps missing the same issue, but I will give it one more shot" | After 3 strikes, STOP. Write `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`. Get the human. |
 | "I will skip the FP-primitives block on this dispatch, the agent knows" | No. The dispatch-time priming is mandatory for every coding-agent dispatch. |
 | "I will assume the plan path since there is only one in docs/" | No. Ask via AskUserQuestion. Never guess. |
 

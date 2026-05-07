@@ -1,6 +1,8 @@
 # tk-rpie
 
-Research-Plan-Implement-Eval workflow plugin. The core of tk-harness.
+Research-Plan-Stub-Test-Implement-Eval (**RPSTIE**) workflow plugin. The core of tk-harness.
+
+> **Naming note.** The workflow acronym is **RPSTIE** (six stages: Research, Plan, Stub, Test, Implement, Eval). The plugin namespace is **tk-rpie**, kept short for skill / agent reference ergonomics (e.g. `tk-rpie:executing-an-implementation-plan`). The plugin name is not changing.
 
 Status: M0 skeleton — manifest only. Substantive implementation in M4.
 
@@ -65,7 +67,7 @@ Discipline skills:
 2. **Worktree mandatory** for any non-trivial task; ed3d makes it optional.
 3. **Original file preserved** during refactor for reviewer's old-vs-new diff.
 4. **FP-primitives block** injected into every coding subagent dispatch.
-5. **3-strike fix-loop cap** with auto-escalation `BLOCKED.md`.
+5. **3-strike fix-loop cap** with auto-escalation to `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`.
 
 ## Provenance
 

@@ -1,5 +1,87 @@
 # Changelog
 
+## [tk-harness] M3+M4+M5 — house-style, verify, hooks, ROADMAP, reconciliation
+
+Six parallel agents landed the rest of the harness in one wave plus a
+reconciliation sweep across wave-1 files for locked decisions.
+
+**New (tk-house-style):**
+- `skills/nearly-pure-functional/SKILL.md` (180) - Tier-2 anchor: glossary,
+  forbidden list, smart constructors, parse-don't-validate
+- `skills/nearly-pure-functional/{tier-1,tier-2,tier-3}.md` - tier sub-pages
+- `skills/nearly-pure-functional/{typescript,python,rust}.md` - per-language
+  quick cards with concrete tooling
+- `CLAUDE.md` - plugin-level conventions
+- Ported from ed3d-house-style: `writing-good-tests`, `property-based-testing`,
+  `howto-code-in-typescript` (+ type-fest, typebox), `howto-code-in-rust`,
+  `defense-in-depth`, `coding-effectively` (anchor adapted to point at
+  nearly-pure-functional)
+- `_docs/anthropic-best-practices.md` (ported)
+- `_docs/linter-configs/{typescript,python,rust}/` - bundled defaults
+  (eslint-plugin-functional, dependency-cruiser, ruff, import-linter,
+  mypy strict, clippy with unwrap-denied) + per-lang README + verify.toml
+  snippets
+
+**New (tk-verify):**
+- `commands/verify.md` - slash command, fail-fast pipeline, anti-gaming
+  output (subagents see PASS/FAIL + last 50 stderr lines only)
+- `hooks/hooks.json` + `edit-validation.sh` + `edit-validation/parsers.sh`
+  - PostToolUse parser-based reject for syntactically broken edits
+- `_docs/example-verify.toml` + `_docs/README.md`
+
+**New (tk-hooks):**
+- `hooks/security-hardening/{check-bash-secrets.py,check-sensitive-file.py}`
+  ported from ed3d-hook-security-hardening
+- `hooks/claudemd-reminder/git-command-reminder.py` adapted: handles both
+  CLAUDE.md and AGENTS.md, scans recent-commit diffs vs unstaged dirty list,
+  fires only when context-anchor files are dirty but not staged for commit
+- `hooks/skill-reinforcement/hook-reminder.sh` ported (already name-agnostic)
+- Combined `hooks.json` + replacement README
+
+**New (tk-rpie skill ports needed by librarian):**
+- `skills/maintaining-project-context/SKILL.md`
+- `skills/writing-claude-md-files/SKILL.md`
+
+**New (docs):**
+- `docs/CONTEXT.md` (376 lines) - comprehensive handoff doc for fresh sessions
+- `docs/ROADMAP.md` (~360 lines) - milestone tracking + decision log
+
+**Reconciliation across wave-1 files (locked decisions applied):**
+- BLOCKED.md path normalized to `.tk-harness/blocked/<phase-id>-<UTC-timestamp>.md`
+  with `YYYYMMDDTHHMMSSZ` timestamp format. Updated 8 files spanning
+  stub-author, test-author, body-implementor, code-reviewer agents and
+  writing-bodies-against-tests + executing-an-implementation-plan skills.
+- STATUS sentinel format `STATUS: BLOCKED - <reason>` (ASCII hyphen, no
+  em-dash) added to stub/test/body agent report templates;
+  orchestrator regex `^STATUS: BLOCKED\b` specified in
+  executing-an-implementation-plan.
+- `find . -name '*.original'` replaced with `Glob('**/*.original')` in
+  code-reviewer Step 2b; tool-usage-rules exception removed.
+- README mentions of "RPIE" workflow normalized to "RPSTIE"; clarifying note
+  added that "tk-rpie" remains the plugin namespace.
+
+**Decisions locked in this wave:**
+- RPSTIE retained as workflow acronym; tk-rpie is plugin namespace
+- /verify is a real slash command in tk-verify (not shorthand)
+- BLOCKED.md location standardized
+- STATUS sentinel format standardized
+- TS unimplemented marker `throw new Error("not implemented")` is the single
+  allowed throw exception
+- Glob over find for `.original` artifacts
+
+**Known issues / parking lot:**
+- `_docs/anthropic-best-practices.md` was ported verbatim and contains
+  non-ASCII (box-drawing chars in diagrams). Reference doc only; can be
+  scrubbed later if desired.
+- TS edit-validation hook can false-positive on monorepos with path aliases
+  (uses single-file tsc, no tsconfig). Documented in tk-verify _docs README.
+- Linter configs bundle hardcoded example names (`myproject`, `billing`,
+  `auth`, `notifications`) that scaffold needs to substitute when copying
+  into a project.
+- Refactor-task tagging convention not yet locked; recommended
+  `<!-- TASK_TYPE: refactor -->` marker in phase file.
+- M6 dogfood target not yet picked.
+
 ## [tk-harness] M2 (in progress) — tk-rpie verbatim ports
 
 Mass port of ed3d-plan-and-execute commands and skills via cp+sed renames. References to ed3d plugin namespaces, model names, and `.ed3d/` rewritten to tk-harness equivalents. Provenance footer added to every ported file.
