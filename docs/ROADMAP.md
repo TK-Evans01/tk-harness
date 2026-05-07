@@ -120,9 +120,7 @@ Shipped as `[tk-harness] M1`.
 
 - Dropped triage gate from M2 scope; full RPSTIE for every task currently.
 - Slimmed tk-verify scope: thin `/verify` runner only, no per-language skills.
-  Linter / typecheck / arch-lint configs bundled in
-  `tk-house-style/_docs/linter-configs/<lang>/`, copied at project scaffold
-  time.
+  Linter configs are project-owned; the harness does not ship defaults.
 - Roadmap renumbered: M2 = tk-rpie core, M3 = tk-house-style, M4 = tk-verify.
 
 ## M2 - tk-rpie (DONE pending small reconciliation)
@@ -262,23 +260,12 @@ Currently in tree as placeholders:
 Plus three more ports inbound from ed3d-house-style. All ports get the sed
 renames + provenance footer.
 
-### Parallel agent I - linter configs bundled in _docs/linter-configs/
+### Linter configs - REMOVED from harness scope (2026-05-06)
 
-Already partially landed:
-
-- `_docs/linter-configs/README.md`
-- `_docs/linter-configs/typescript/`:
-  - `eslint.functional.cjs`
-  - `dependency-cruiser.cjs`
-  - `tsconfig.strict.json`
-  - `ts-pattern-note.md`
-  - `example-verify.toml.snippet`
-  - `README.md`
-- `_docs/linter-configs/python/README.md` (configs to follow).
-
-These are NOT skills. They are config templates that `tk-verify` reads from
-projects after the project copies them at scaffold time. The plugin owns the
-canonical version; the project owns its working copy.
+The harness no longer ships default linter / typecheck / arch-lint configs.
+Each project sets up its own linter configuration. `/verify` reads
+`.tk-harness/verify.toml` (or auto-detects from package manifests) to know
+what commands to run; the contents of those linters are project-owned.
 
 ## M4 - tk-verify (IN PROGRESS - parallel agent J)
 
@@ -359,9 +346,9 @@ Format: `<date> | <decision> | <one-line resolution>`
 - 2026-05-06 | Triage gate | DEFERRED. Every task currently routes through
   full RPSTIE. Re-evaluate after M6 dogfood reveals friction points.
 - 2026-05-06 | tk-verify scope | slim. `/verify` runner + edit-validation
-  hook only; no per-language skills; linter configs bundled in
-  tk-house-style/_docs/linter-configs/<lang>/, copied to projects at scaffold
-  time.
+  hook only; no per-language skills.
+- 2026-05-06 | Linter configs | removed from harness scope. The harness
+  does not ship defaults. Each project owns its lint setup.
 - 2026-05-06 | RPSTIE retained | as the workflow acronym (six stages:
   Research, Plan, Stub, Test, Implement, Eval). The plugin namespace is
   `tk-rpie`, kept short for ergonomics. Plugin name not changing (would
@@ -400,7 +387,6 @@ Format: `<date> | <decision> | <one-line resolution>`
 
 - Agent G: nearly-pure-functional anchor + tier files + 3 lang cards.
 - Agent H: 6 ported house-style skills with sed renames + provenance.
-- Agent I: linter configs (Python configs, finished TS configs).
 - Agent J: example `verify.toml` for TS and Python.
 - Agent K: filled-in `claudemd-reminder` hook + `hooks.json` wiring.
 
@@ -449,8 +435,6 @@ without confirming the dogfood target with the user.
   `<project>/.tk-harness/blocked/<phase-id>-<YYYYMMDDTHHMMSSZ>.md`
 - Verify config (generated at scaffold time, project-side):
   `<project>/.tk-harness/verify.toml`
-- Linter configs (canonical templates, plugin-side):
-  `/home/tk/Projects/harness/plugins/tk-house-style/_docs/linter-configs/<lang>/`
 
 ## Reference: external sources
 

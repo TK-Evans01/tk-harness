@@ -24,7 +24,7 @@ Rough Idea
 /finish-branch               ---> merge / PR / discard
 ```
 
-Verification: `/verify` runs the project's configured linters/typecheck/tests. Configs are bundled in `tk-house-style/_docs/linter-configs/<lang>/` and copied at project scaffold time. No per-language verify skills.
+Verification: `/verify` runs the project's configured linters/typecheck/tests. Linter configs are project-owned (set up once per project, not bundled by the harness). No per-language verify skills.
 
 Main thread runs at top-line model (Opus). Subagents default to Sonnet; reviewer escalates to Opus for subtle catches.
 
@@ -81,7 +81,7 @@ See `plugins/tk-house-style/skills/nearly-pure-functional/SKILL.md` (M3).
 - **M0** Skeleton (done)
 - **M1** Foundation + research plugins (port from ed3d, adapt) — IN PROGRESS
 - **M2** `tk-rpie` core — agents + key skills + commands
-- **M3** `tk-house-style` — `nearly-pure-functional` skill + per-lang cards + linter configs (bundled)
+- **M3** `tk-house-style` — `nearly-pure-functional` skill + per-lang cards
 - **M4** `tk-verify` — thin `/verify` command + edit-validation hook
 - **M5** `tk-hooks` — port ed3d hook trio
 - **M6** Dogfood on a real project, tighten

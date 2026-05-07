@@ -14,7 +14,7 @@ Status: M0 skeleton — manifest only.
 
 - `edit-validation` — PostToolUse hook on Edit/Write. Runs language parser; rejects syntactically broken edits before they hit disk. Inspired by SWE-agent.
 
-No per-language skills. `/verify` is a thin runner. Linter / typecheck / arch-lint configs live in `tk-house-style/_docs/linter-configs/<lang>/` and are copied into projects at scaffold time. Each project owns its configs after that.
+No per-language skills. `/verify` is a thin runner. Linter / typecheck / arch-lint configs are project-owned — set up once per project. The harness does not ship defaults.
 
 ## Verify Pipeline
 
@@ -34,4 +34,4 @@ Stop condition for completion: all green AND todo list empty AND no uncommitted 
 
 ## Linter Defaults
 
-Bundled in `plugins/tk-house-style/_docs/linter-configs/<lang>/`. Copied into a project once at scaffold time. The project owns them after that.
+Not shipped by the harness. Each project sets up its own linter / typecheck / arch-lint configs. `/verify` reads `.tk-harness/verify.toml` (or auto-detects from package manifests) to know what commands to run.

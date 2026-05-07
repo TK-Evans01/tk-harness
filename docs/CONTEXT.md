@@ -52,7 +52,7 @@ Acronym: **RPSTIE** (Research-Plan-Stub-Test-Implement-Eval). Plugin namespace i
 |--------|------|
 | `tk-foundation`  | Generic-purpose subagents (haiku-general, sonnet-general, opus-general) and base skills |
 | `tk-research`    | Research subagents: codebase-investigator, internet-researcher, combined-researcher, remote-code-researcher |
-| `tk-house-style` | Tier-2 nearly-pure functional style; per-language quick cards; bundled linter configs |
+| `tk-house-style` | Tier-2 nearly-pure functional style; per-language quick cards |
 | `tk-rpie`        | The RPSTIE workflow: commands + 8+ subagents + 18+ skills |
 | `tk-verify`      | Thin `/verify` runner + PostToolUse edit-validation hook |
 | `tk-hooks`       | Cross-cutting: security-hardening, claudemd-reminder, skill-reinforcement |
@@ -388,7 +388,7 @@ Ports from ed3d-research-agents.
 In flight via parallel agents:
 - Anchor + tier files + per-language cards (`nearly-pure-functional/SKILL.md`, `tier-1.md`, `tier-2.md`, `tier-3.md`, `typescript.md`, `python.md`, `rust.md`)
 - 6 ported skills (writing-good-tests, property-based-testing, howto-code-in-typescript, howto-code-in-rust, defense-in-depth, coding-effectively + anthropic-best-practices doc)
-- Bundled linter configs in `_docs/linter-configs/{typescript,python,rust}/`
+- (Linter configs NOT bundled — projects own their lint setup)
 
 ### tk-verify — IN PROGRESS (M4)
 
@@ -485,7 +485,7 @@ ed3d itself derives many skills from `obra/superpowers` (Jesse Vincent, MIT). Bo
 - **Why sonnet not haiku for stub/test/body:** ed3d uses haiku for task-implementor-fast. We bumped to sonnet because Tier-2 FP discipline is non-trivial; haiku rationalizes shortcuts. Cost trade-off accepted.
 - **Why grep + tree-sitter map over embeddings:** embeddings retrieve wrong chunks silently. Aider's PageRank-style symbol map proven; ed3d follows same. We do too.
 - **Why write to disk over compaction summaries:** compaction is lossy. AGENTS.md, todos, progress.md, BLOCKED.md, plan files survive. Compaction summarizes prompts; artifacts survive.
-- **Why slim tk-verify:** linter configs are project-owned after scaffold. Verify is a thin runner; per-language skills bloat context with no benefit. Configs ship in tk-house-style/_docs/linter-configs/.
+- **Why slim tk-verify:** linter configs are project-owned. Verify is a thin runner; per-language skills bloat context with no benefit. The harness does not ship default configs (decided 2026-05-06: bundled defaults removed; each project sets its own up).
 - **Why FP-primitives active block injection at dispatch:** chaos-theory narrowing. Naming concrete primitives in the prompt biases output more than abstract style directives. Empirical effect.
 - **Why human-transparency rule:** orchestrator must print every subagent's full response. Otherwise user loses visibility into their own codebase. Adopted from ed3d.
 

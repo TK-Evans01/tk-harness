@@ -17,10 +17,6 @@ reconciliation sweep across wave-1 files for locked decisions.
   `defense-in-depth`, `coding-effectively` (anchor adapted to point at
   nearly-pure-functional)
 - `_docs/anthropic-best-practices.md` (ported)
-- `_docs/linter-configs/{typescript,python,rust}/` - bundled defaults
-  (eslint-plugin-functional, dependency-cruiser, ruff, import-linter,
-  mypy strict, clippy with unwrap-denied) + per-lang README + verify.toml
-  snippets
 
 **New (tk-verify):**
 - `commands/verify.md` - slash command, fail-fast pipeline, anti-gaming
@@ -75,9 +71,6 @@ reconciliation sweep across wave-1 files for locked decisions.
   scrubbed later if desired.
 - TS edit-validation hook can false-positive on monorepos with path aliases
   (uses single-file tsc, no tsconfig). Documented in tk-verify _docs README.
-- Linter configs bundle hardcoded example names (`myproject`, `billing`,
-  `auth`, `notifications`) that scaffold needs to substitute when copying
-  into a project.
 - Refactor-task tagging convention not yet locked; recommended
   `<!-- TASK_TYPE: refactor -->` marker in phase file.
 - M6 dogfood target not yet picked.
@@ -129,7 +122,7 @@ Ports tk-foundation and tk-research from ed3dai/ed3d-plugins (CC-BY-SA-4.0).
 
 **Changed (design adjustments):**
 - Dropped triage gate from M2 scope; full RPIE for every task.
-- Slimmed `tk-verify` scope: thin `/verify` runner only, no per-language skills. Linter / typecheck / arch-lint configs bundled in `tk-house-style/_docs/linter-configs/<lang>/`, copied at project scaffold time.
+- Slimmed `tk-verify` scope: thin `/verify` runner only, no per-language skills. Linter configs are project-owned; the harness does not ship defaults.
 - Roadmap renumbered: M2 = `tk-rpie` core, M3 = `tk-house-style`, M4 = `tk-verify`.
 
 ## [tk-harness] 0.1.0 — M0 Skeleton
