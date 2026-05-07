@@ -17,9 +17,14 @@ Rough Idea
     | (clear context)
     v
 /execute-implementation-plan ---> per task: stub-author -> test-author -> body-implementor
-                                  per phase: code-reviewer -> bug-fixer (capped loop)
-                                  end: test-analyst -> librarian -> finishing-a-development-branch
+                                  per phase: code-reviewer -> bug-fixer (3-strike cap)
+                                  end: librarian -> code-reviewer -> test-analyst
+    |
+    v
+/finish-branch               ---> merge / PR / discard
 ```
+
+Verification: `/verify` runs the project's configured linters/typecheck/tests. Configs are bundled in `tk-house-style/_docs/linter-configs/<lang>/` and copied at project scaffold time. No per-language verify skills.
 
 Main thread runs at top-line model (Opus). Subagents default to Sonnet; reviewer escalates to Opus for subtle catches.
 
@@ -30,7 +35,7 @@ Main thread runs at top-line model (Opus). Subagents default to Sonnet; reviewer
 | `tk-foundation`     | Generic subagents + base skills |
 | `tk-research`       | Codebase + internet research subagents |
 | `tk-house-style`    | Tier-2 nearly-pure FP discipline + per-language quick cards |
-| `tk-verify`         | `/verify` gate, edit-validation hook |
+| `tk-verify`         | Thin `/verify` runner + edit-validation hook |
 | `tk-rpie`           | RPSTIE workflow commands and subagents |
 | `tk-hooks`          | Security hardening, CLAUDE.md reminder, skill reinforcement |
 
@@ -73,13 +78,15 @@ See `plugins/tk-house-style/skills/nearly-pure-functional/SKILL.md` (M3).
 
 ## Roadmap
 
-- **M0** Skeleton (this commit)
-- **M1** Foundation + research plugins (port from ed3d, adapt)
-- **M2** `tk-verify` — `/verify` gate, edit-validation hook, per-language arch-lint configs
-- **M3** `tk-house-style` — `nearly-pure-functional` skill + per-language cards + linter configs
-- **M4** `tk-rpie` — full RPSTIE workflow
+- **M0** Skeleton (done)
+- **M1** Foundation + research plugins (port from ed3d, adapt) — IN PROGRESS
+- **M2** `tk-rpie` core — agents + key skills + commands
+- **M3** `tk-house-style` — `nearly-pure-functional` skill + per-lang cards + linter configs (bundled)
+- **M4** `tk-verify` — thin `/verify` command + edit-validation hook
 - **M5** `tk-hooks` — port ed3d hook trio
 - **M6** Dogfood on a real project, tighten
+
+Note: triage gate deferred. Every task currently routes through full RPIE.
 
 ## Attribution
 

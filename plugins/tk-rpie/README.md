@@ -10,10 +10,6 @@ Status: M0 skeleton — manifest only. Substantive implementation in M4.
 Rough Idea
     |
     v
-/triage <task>                     ---> trivial / standard / complex
-    | (trivial: direct edit + /verify, exit)
-    | (standard or complex:)
-    v
 /start-design-plan                 ---> docs/design-plans/YYYY-MM-DD-<topic>.md
     | (clear context)
     v
@@ -46,7 +42,6 @@ Auxiliary: `/flesh-it-out` for clarification standalone.
 ## Skills
 
 Workflow skills:
-- `triage-gate`
 - `using-rpie`
 - `asking-clarifying-questions`
 - `starting-a-design-plan`, `writing-design-plans`
@@ -67,11 +62,10 @@ Discipline skills:
 ## Key Divergences from ed3d-plan-and-execute
 
 1. **Stubs/tests/bodies are three separate subagents**, not collapsed into one TDD implementor.
-2. **Worktree-first** for non-trivial; ed3d makes it optional.
-3. **Triage gate** routes trivial tasks around the full pipeline.
-4. **Original file preserved** during refactor for reviewer's old-vs-new diff.
-5. **FP-primitives block** injected into every coding subagent dispatch.
-6. **3-strike fix-loop cap** with auto-escalation BLOCKED.md.
+2. **Worktree mandatory** for any non-trivial task; ed3d makes it optional.
+3. **Original file preserved** during refactor for reviewer's old-vs-new diff.
+4. **FP-primitives block** injected into every coding subagent dispatch.
+5. **3-strike fix-loop cap** with auto-escalation `BLOCKED.md`.
 
 ## Provenance
 

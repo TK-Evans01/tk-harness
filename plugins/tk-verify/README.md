@@ -10,36 +10,28 @@ Status: M0 skeleton — manifest only.
 
 - `/verify` — runs the full gate against the current working directory. Pass/fail summary + last 50 lines stderr per failed step. Internals hidden from agents (anti-gaming).
 
-### Skills
-
-- `running-the-verify-gate` — how subagents invoke and interpret /verify
-- `architectural-lint` — per-language dependency/layer enforcement
-- `purity-checks` — Tier-2 FP linter rules
-
 ### Hooks
 
 - `edit-validation` — PostToolUse hook on Edit/Write. Runs language parser; rejects syntactically broken edits before they hit disk. Inspired by SWE-agent.
 
+No per-language skills. `/verify` is a thin runner. Linter / typecheck / arch-lint configs live in `tk-house-style/_docs/linter-configs/<lang>/` and are copied into projects at scaffold time. Each project owns its configs after that.
+
 ## Verify Pipeline
 
-Default order (fail-fast):
+`/verify` reads `.tk-harness/verify.toml` (or auto-detects from `package.json` / `pyproject.toml` / `Cargo.toml`) and runs the configured commands fail-fast in this order:
 
 ```
-1. typecheck       (tsc --noEmit / mypy --strict / cargo check)
-2. lint            (eslint / ruff / clippy)
-3. architectural   (dep-cruiser / import-linter / crate visibility)
-4. purity          (eslint-plugin-functional / ruff custom / clippy lints)
-5. tests           (vitest / pytest / cargo test)
+1. typecheck   (e.g., tsc --noEmit / mypy --strict / cargo check)
+2. lint        (e.g., eslint / ruff / clippy)
+3. arch-lint   (e.g., depcruise / lint-imports / clippy with visibility lints)
+4. purity      (e.g., eslint-plugin-functional / ruff custom / clippy)
+5. tests       (e.g., vitest / pytest / cargo test)
 ```
+
+Each step is optional. Subagents see only `pass | fail` + last 50 lines of stderr per failed step (anti-gaming).
 
 Stop condition for completion: all green AND todo list empty AND no uncommitted changes.
 
-## Per-Language Configs
+## Linter Defaults
 
-Skill drops these into the project on first run:
-
-- TypeScript: `.dependency-cruiser.cjs`, `eslint.config.js` extension
-- Python: `.importlinter`, `ruff.toml` overlay
-- Rust: `clippy.toml`, workspace visibility audit script
-
-Configs are project-tunable; the harness only ensures they exist with sane defaults.
+Bundled in `plugins/tk-house-style/_docs/linter-configs/<lang>/`. Copied into a project once at scaffold time. The project owns them after that.
