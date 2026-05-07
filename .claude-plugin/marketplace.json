@@ -1,0 +1,54 @@
+{
+    "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name": "tk-harness",
+    "version": "0.1.0",
+    "description": "TK's harness for Claude Code: research-plan-stub-test-implement-eval workflow with strict near-pure functional discipline",
+    "owner": {
+        "name": "Tyler Evans",
+        "email": "tylerkevans01@pm.me"
+    },
+    "plugins": [
+        {
+            "name": "tk-foundation",
+            "description": "Generic-purpose subagents (haiku/sonnet/opus) and skills the rest of the harness depends on.",
+            "version": "0.1.0",
+            "source": "./plugins/tk-foundation",
+            "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
+        },
+        {
+            "name": "tk-research",
+            "description": "Research subagents (codebase, internet, combined) and supporting skills.",
+            "version": "0.1.0",
+            "source": "./plugins/tk-research",
+            "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
+        },
+        {
+            "name": "tk-house-style",
+            "description": "Tier-2 nearly-pure functional house style; per-language quick cards; testing discipline.",
+            "version": "0.1.0",
+            "source": "./plugins/tk-house-style",
+            "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
+        },
+        {
+            "name": "tk-verify",
+            "description": "Verification gate: typecheck, lint, architectural lint, purity checks. Edit-validation hook.",
+            "version": "0.1.0",
+            "source": "./plugins/tk-verify",
+            "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
+        },
+        {
+            "name": "tk-rpie",
+            "description": "Research-Plan-Implement-Eval workflow. Stub-author, test-author, body-implementor, code-reviewer, bug-fixer, test-analyst.",
+            "version": "0.1.0",
+            "source": "./plugins/tk-rpie",
+            "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
+        },
+        {
+            "name": "tk-hooks",
+            "description": "Cross-cutting hooks: security hardening, CLAUDE.md reminder, skill reinforcement.",
+            "version": "0.1.0",
+            "source": "./plugins/tk-hooks",
+            "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"}
+        }
+    ]
+}

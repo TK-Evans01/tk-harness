@@ -1,0 +1,8 @@
+{
+    "name": "tk-research",
+    "description": "Research subagents (codebase, internet, combined) and supporting skills. Used by tk-rpie design and verification phases.",
+    "version": "0.1.0",
+    "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"},
+    "license": "CC-BY-SA-4.0",
+    "keywords": ["research", "investigation", "tk-harness"]
+}

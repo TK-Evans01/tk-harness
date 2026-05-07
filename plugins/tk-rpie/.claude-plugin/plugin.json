@@ -1,0 +1,8 @@
+{
+    "name": "tk-rpie",
+    "description": "Research-Plan-Implement-Eval workflow. Stubs/tests/bodies as separate subagents. Worktree-first, per-phase review with capped fix loop.",
+    "version": "0.1.0",
+    "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"},
+    "license": "CC-BY-SA-4.0",
+    "keywords": ["workflow", "planning", "tdd", "stubs", "review", "tk-harness"]
+}

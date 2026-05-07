@@ -1,0 +1,8 @@
+{
+    "name": "tk-verify",
+    "description": "Verification gate: typecheck, lint, architectural lint, purity checks. Includes /verify command and edit-validation hook.",
+    "version": "0.1.0",
+    "author": {"name": "Tyler Evans", "email": "tylerkevans01@pm.me"},
+    "license": "CC-BY-SA-4.0",
+    "keywords": ["verification", "linting", "ci", "tk-harness"]
+}

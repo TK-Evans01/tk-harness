@@ -1,0 +1,15 @@
+tk-harness — Claude Code plugin marketplace
+
+Original content in this repository is licensed under the
+Creative Commons Attribution-ShareAlike 4.0 International License (CC-BY-SA-4.0).
+
+Full license text: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+Content derived from third-party projects retains its original license:
+- Files derived from obra/superpowers (https://github.com/obra/superpowers)
+  by Jesse Vincent are licensed under the MIT License. Such files are marked
+  in their per-plugin LICENSE.superpowers files.
+- Files derived from ed3dai/ed3d-plugins (https://github.com/ed3dai/ed3d-plugins)
+  by Ed Ropple are licensed CC-BY-SA-4.0; attribution is preserved per-file.
+
+Copyright (c) 2026 Tyler Evans.
